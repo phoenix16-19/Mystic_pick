@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Tarot — Mystic Pick ✨</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .career-pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      max-width: 540px;
+      margin: 2rem auto 0;
+    }
+
+    .career-pillar {
+      padding: 1.2rem 0.9rem;
+      text-align: center;
+    }
+
+    .pillar-icon   { font-size: 1.5rem; margin-bottom: 0.4rem; }
+    .pillar-label  { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink3); margin-bottom: 0.25rem; }
+    .pillar-value  { font-family: var(--serif); font-size: 0.9rem; color: var(--ink2); }
+
+    @media (max-width: 500px) {
+      .career-pillars { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="star-field"></div>
+
+<div class="suspense-overlay" id="suspense">
+  <div class="suspense-glyph">⭐</div>
+  <div class="suspense-text">Aligning career energy…</div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-brand">Mystic <span>Pick</span> ✨</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="pick.html">Pick a Card</a></li>
+    <li><a href="daily.html">Daily</a></li>
+    <li><a href="love.html">Love</a></li>
+    <li><a href="career.html">Career</a></li>
+    <li><a href="yesno.html">Yes / No</a></li>
+  </ul>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page">
+
+  <!-- PICK SCREEN -->
+  <div id="career-pick-screen">
+    <section class="hero fade-in">
+      <p class="eyebrow">✦ &nbsp; Purpose & Prosperity &nbsp; ✦</p>
+      <h1 class="hero-title" style="font-size:clamp(2.2rem,6vw,4rem)">Career <em>Tarot</em></h1>
+      <p class="hero-sub">The universe has a clear vision for your purpose. One card will show you the way.</p>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="cards-row" id="career-cards-row"></div>
+      <p style="text-align:center;font-size:0.78rem;color:var(--ink3);margin-top:0.75rem;letter-spacing:0.05em">
+        ✦ &nbsp; Trust which card you're drawn to &nbsp; ✦
+      </p>
+    </section>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="career-result-screen" style="display:none">
+    <section class="hero fade-in" style="padding-bottom:1rem">
+      <p class="eyebrow">✦ &nbsp; Career Reading &nbsp; ✦</p>
+      <h1 class="hero-title" style="font-size:clamp(2rem,5vw,3.5rem)">Your Path <em>Forward</em></h1>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="result-panel">
+        <div class="result-card glass">
+          <span class="result-emoji" id="car-res-emoji"></span>
+          <div class="result-card-name" id="car-res-name"></div>
+          <div class="result-orientation" id="car-res-orient"></div>
+          <div class="result-rule"></div>
+          <p class="result-msg" id="car-res-msg"></p>
+          <div class="result-keyword" id="car-res-kw"></div>
+        </div>
+      </div>
+
+      <!-- Career insight messages -->
+      <div class="msg-list" id="career-msgs-list" style="margin-top:2rem"></div>
+
+      <div class="btn-row" style="margin-top:2rem">
+        <button class="btn btn-primary" onclick="resetCareer()">New Reading</button>
+        <button class="btn btn-unlock" onclick="alert('Full readings coming soon ✨')">Unlock Full Reading 🔒</button>
+      </div>
+    </section>
+
+    <!-- Career pillars -->
+    <section class="section" style="padding-top:0">
+      <div class="divider"><i>✦</i></div>
+      <p class="sec-title">Your Current Career Energies</p>
+      <p class="sec-sub">Reflected in today's cosmic alignment</p>
+      <div class="career-pillars" id="career-pillars"></div>
+    </section>
+
+    <section class="section" style="padding-top:0;padding-bottom:3rem">
+      <div class="unlock-strip glass">
+        <h3>Get Your Personalized Reading</h3>
+        <p>Unlock a full career spread with timeline guidance, salary & opportunity predictions, and a step-by-step action plan from the cards.</p>
+        <button class="btn btn-unlock" onclick="alert('Coming soon ✨')">Unlock Career Deep-Dive 🔒</button>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<footer>✦ &nbsp; Mystic Pick &nbsp; · &nbsp; Your purpose is calling &nbsp; ✦</footer>
+
+<script src="deck.js"></script>
+<script src="ui.js"></script>
+<script>
+  const CAREER_PILLAR_DATA = [
+    { icon:"🎯", label:"Focus Area",    vals:["Deep Skill-Building","Visibility","Networking","Strategy","Creativity","Leadership"] },
+    { icon:"💰", label:"Abundance Flow",vals:["Building","Accelerating","Receiving","Conserving","Planting Seeds","Harvesting"] },
+    { icon:"⏳", label:"Timeline",      vals:["Now","Next Month","3–6 Months","Long Game","Imminent","Patience Needed"] },
+    { icon:"🔑", label:"Key Action",    vals:["Ask","Create","Release","Commit","Pivot","Learn","Collaborate"] },
+    { icon:"🌱", label:"Growth Mode",   vals:["Inner Alignment","Outer Expression","Foundation","Expansion","Transition","Mastery"] },
+    { icon:"🧭", label:"Direction",     vals:["Stay the Course","Change Direction","Accelerate","Slow Down","New Chapter","Finish First"] },
+  ];
+
+  function dealCareerCards() {
+    buildCards('career-cards-row', 3, onCareerCard);
+  }
+
+  function onCareerCard({ card, reversed }) {
+    showSuspense(1000).then(() => {
+      document.getElementById('car-res-emoji').textContent = card.emoji;
+      document.getElementById('car-res-name').textContent  = card.name;
+
+      const orientEl = document.getElementById('car-res-orient');
+      orientEl.textContent = reversed ? '⟳ Reversed' : '↑ Upright';
+      orientEl.className   = 'result-orientation ' + (reversed ? 'rev' : 'up');
+
+      document.getElementById('car-res-msg').textContent = reversed ? card.reversed : card.upright;
+      document.getElementById('car-res-kw').textContent  = card.keywords ? card.keywords[0] : 'Career';
+
+      // Career insight messages
+      const msgs = pickN(CAREER_MESSAGES, 4);
+      const list = document.getElementById('career-msgs-list');
+      list.innerHTML = '';
+      const labels = ['Current Energy', 'Hidden Strength', 'What to Pursue', 'The Outcome'];
+      msgs.forEach((m, i) => {
+        const div = document.createElement('div');
+        div.className = 'msg-card glass';
+        div.style.animationDelay = (i * 0.1) + 's';
+        div.innerHTML = `
+          <div class="msg-icon">${m.icon}</div>
+          <div class="msg-body">
+            <div class="msg-label">${labels[i]}</div>
+            <div class="msg-title">${m.title}</div>
+            <div class="msg-text">${m.text}</div>
+            <span class="msg-kw">${m.keyword}</span>
+          </div>`;
+        list.appendChild(div);
+      });
+
+      // Pillars
+      const pillars = document.getElementById('career-pillars');
+      pillars.innerHTML = '';
+      CAREER_PILLAR_DATA.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'career-pillar glass';
+        div.innerHTML = `
+          <div class="pillar-icon">${p.icon}</div>
+          <div class="pillar-label">${p.label}</div>
+          <div class="pillar-value">${pick(p.vals)}</div>`;
+        pillars.appendChild(div);
+      });
+
+      document.getElementById('career-pick-screen').style.display   = 'none';
+      document.getElementById('career-result-screen').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  function resetCareer() {
+    document.getElementById('career-result-screen').style.display = 'none';
+    document.getElementById('career-pick-screen').style.display   = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    dealCareerCards();
+  }
+
+  document.addEventListener('DOMContentLoaded', dealCareerCards);
+</script>
+</body>
+</html>

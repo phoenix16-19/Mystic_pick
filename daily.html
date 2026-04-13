@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Tarot — Mystic Pick ✨</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .daily-energy-bar {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 1.5rem 0 0;
+      flex-wrap: wrap;
+    }
+
+    .energy-pill {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 50px;
+      background: rgba(184,159,224,0.1);
+      color: var(--ink3);
+      border: 1px solid rgba(184,159,224,0.3);
+    }
+
+    .moon-phase {
+      text-align: center;
+      margin: 2.5rem 0 0;
+    }
+
+    .moon-phase-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink3);
+      margin-bottom: 0.5rem;
+    }
+
+    .moon-phase-val {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      color: var(--ink2);
+    }
+
+    .daily-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      max-width: 520px;
+      margin: 2rem auto 0;
+    }
+
+    .mini-insight {
+      padding: 1.2rem 1rem;
+      text-align: center;
+    }
+
+    .mini-insight-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+
+    .mini-insight-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink3);
+      margin-bottom: 0.3rem;
+    }
+
+    .mini-insight-val {
+      font-family: var(--serif);
+      font-size: 0.92rem;
+      color: var(--ink2);
+      font-weight: 400;
+    }
+
+    @media (max-width: 500px) {
+      .daily-mini-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="star-field"></div>
+
+<nav>
+  <a href="index.html" class="nav-brand">Mystic <span>Pick</span> ✨</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="pick.html">Pick a Card</a></li>
+    <li><a href="daily.html">Daily</a></li>
+    <li><a href="love.html">Love</a></li>
+    <li><a href="career.html">Career</a></li>
+    <li><a href="yesno.html">Yes / No</a></li>
+  </ul>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page">
+
+  <section class="hero fade-in">
+    <p class="eyebrow">✦ &nbsp; Today's Cosmic Message &nbsp; ✦</p>
+    <h1 class="hero-title" style="font-size:clamp(2.2rem,6vw,4rem)">Daily <em>Tarot</em></h1>
+    <p class="hero-sub">A message chosen by the universe — just for today, just for you.</p>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="daily-card glass fade-in-2">
+      <div class="daily-date" id="daily-date"></div>
+      <span class="daily-icon" id="daily-icon"></span>
+      <div class="daily-title" id="daily-title"></div>
+      <div class="result-rule" style="margin:0.9rem auto 1.4rem"></div>
+      <p class="daily-msg" id="daily-msg"></p>
+      <div class="daily-aff" id="daily-aff"></div>
+
+      <div class="daily-energy-bar" id="energy-bar"></div>
+    </div>
+
+    <div class="btn-row fade-in-3" style="margin-top:1.5rem">
+      <button class="btn btn-primary" onclick="newDailyMessage()">New Message ✦</button>
+      <button class="btn btn-unlock" onclick="alert('Full readings coming soon ✨')">Unlock Full Reading 🔒</button>
+    </div>
+
+    <p style="text-align:center;font-size:0.75rem;color:var(--ink3);margin-top:1.2rem;letter-spacing:0.05em">
+      ✦ &nbsp; Come back tomorrow for a new cosmic message &nbsp; ✦
+    </p>
+  </section>
+
+  <!-- Mini insights -->
+  <section class="section" style="padding-top:0">
+    <div class="divider"><i>✦</i></div>
+    <p class="sec-title">Today's Cosmic Snapshot</p>
+    <p class="sec-sub">Energies present in today's reading</p>
+
+    <div class="daily-mini-grid" id="mini-grid"></div>
+  </section>
+
+  <!-- Affirmation box -->
+  <section class="section" style="padding-top:0; padding-bottom:3rem">
+    <div class="divider"><i>✦</i></div>
+    <div class="glass" style="max-width:500px;margin:0 auto;padding:2rem;text-align:center">
+      <p style="font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink3);margin-bottom:0.75rem">Your Affirmation for Today</p>
+      <p style="font-family:var(--serif);font-size:1.4rem;font-weight:400;font-style:italic;color:var(--ink2);line-height:1.65" id="aff-display"></p>
+      <div style="margin-top:1.5rem">
+        <button class="btn btn-unlock" onclick="alert('Personalized readings coming soon ✨')">Get Your Personalized Reading 🔒</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>✦ &nbsp; Mystic Pick &nbsp; · &nbsp; Come back tomorrow for a new message &nbsp; ✦</footer>
+
+<script src="deck.js"></script>
+<script src="ui.js"></script>
+<script>
+  const MINI_THEMES = [
+    { icon:"🌬️", label:"Mental Energy",   vals:["Clear & Sharp","Dreamy & Soft","Searching","Grounded","Expansive"] },
+    { icon:"❤️", label:"Heart Energy",    vals:["Open & Warm","Healing","Tender","Longing","Grateful"] },
+    { icon:"⚡",  label:"Action Energy",   vals:["High Momentum","Slow & Steady","Pivot Point","Rest First","Bold Move"] },
+    { icon:"🪐",  label:"Cosmic Influence",vals:["Uranus Rising","Luna's Pull","Solar Surge","Saturn Steady","Neptune Dreams"] },
+    { icon:"🌱",  label:"Growth Zone",     vals:["Inner Work","Outer Expression","Deep Roots","New Seeds","Full Bloom"] },
+    { icon:"🔮",  label:"Shadow Energy",   vals:["Integration","Release","Acknowledgement","Acceptance","Dissolving"] },
+  ];
+
+  let currentCard;
+
+  function renderDaily(card) {
+    document.getElementById('daily-date').textContent  = today();
+    document.getElementById('daily-icon').textContent  = card.icon;
+    document.getElementById('daily-title').textContent = card.title;
+    document.getElementById('daily-msg').textContent   = card.msg;
+    document.getElementById('daily-aff').textContent   = '✦  ' + card.affirmation + '  ✦';
+    document.getElementById('aff-display').textContent = '"' + card.affirmation + '"';
+
+    // Energy pills
+    const energies = ['Reflection', 'Intuition', 'Transformation', 'Growth', 'Healing', 'Clarity', 'Release'];
+    const bar = document.getElementById('energy-bar');
+    bar.innerHTML = '';
+    pickN(energies, 3).forEach(e => {
+      const pill = document.createElement('span');
+      pill.className = 'energy-pill';
+      pill.textContent = e;
+      bar.appendChild(pill);
+    });
+
+    // Mini grid
+    const grid = document.getElementById('mini-grid');
+    grid.innerHTML = '';
+    MINI_THEMES.forEach(theme => {
+      const div = document.createElement('div');
+      div.className = 'mini-insight glass';
+      div.innerHTML = `
+        <div class="mini-insight-icon">${theme.icon}</div>
+        <div class="mini-insight-label">${theme.label}</div>
+        <div class="mini-insight-val">${pick(theme.vals)}</div>`;
+      grid.appendChild(div);
+    });
+  }
+
+  function newDailyMessage() {
+    const next = pick(DAILY_CARDS.filter(c => c !== currentCard));
+    currentCard = next;
+    renderDaily(currentCard);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    currentCard = pick(DAILY_CARDS);
+    renderDaily(currentCard);
+  });
+</script>
+</body>
+</html>

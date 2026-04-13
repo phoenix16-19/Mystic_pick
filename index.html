@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mystic Pick ✨ — Tarot Readings</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .home-subtitle-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+    .home-stat {
+      text-align: center;
+    }
+    .home-stat-num {
+      font-family: var(--serif);
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--ink2);
+    }
+    .home-stat-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink3);
+    }
+    .stat-sep {
+      width: 1px;
+      height: 40px;
+      background: rgba(184,159,224,0.3);
+    }
+    .tonight-strip {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 1.75rem 2rem;
+      text-align: center;
+    }
+    .tonight-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink3);
+      margin-bottom: 0.6rem;
+    }
+    .tonight-msg {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--ink2);
+      line-height: 1.8;
+    }
+    .feature-card .badge {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 50px;
+      background: rgba(184,159,224,0.15);
+      color: var(--ink3);
+      border: 1px solid rgba(184,159,224,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<div id="star-field"></div>
+
+<!-- Suspense overlay -->
+<div class="suspense-overlay" id="suspense">
+  <div class="suspense-glyph">🔮</div>
+  <div class="suspense-text">Reading the cosmic energy…</div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-brand">Mystic <span>Pick</span> ✨</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="pick.html">Pick a Card</a></li>
+    <li><a href="daily.html">Daily</a></li>
+    <li><a href="love.html">Love</a></li>
+    <li><a href="career.html">Career</a></li>
+    <li><a href="yesno.html">Yes / No</a></li>
+  </ul>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <section class="hero fade-in">
+    <p class="eyebrow">✦ &nbsp; Your Personal Tarot Oracle &nbsp; ✦</p>
+    <h1 class="hero-title">Mystic <em>Pick</em> ✨</h1>
+    <p class="hero-sub">Trust your intuition and discover your message. The cards hold exactly what you need to hear right now.</p>
+
+    <div class="home-subtitle-row fade-in-2">
+      <div class="home-stat"><div class="home-stat-num">78</div><div class="home-stat-label">Cards in Deck</div></div>
+      <div class="stat-sep"></div>
+      <div class="home-stat"><div class="home-stat-num">6</div><div class="home-stat-label">Reading Types</div></div>
+      <div class="stat-sep"></div>
+      <div class="home-stat"><div class="home-stat-num">∞</div><div class="home-stat-label">Possibilities</div></div>
+    </div>
+  </section>
+
+  <div class="divider fade-in-3"><i>✦</i></div>
+
+  <!-- READING MODES -->
+  <section class="section fade-in-3">
+    <p class="sec-title">Choose Your Reading</p>
+    <p class="sec-sub">Each path opens a different window into your soul's current journey</p>
+
+    <div class="feature-grid">
+      <a href="pick.html" class="feature-card glass">
+        <div class="feature-card-icon">🃏</div>
+        <div class="feature-card-title">Pick a Card</div>
+        <div class="feature-card-desc">Choose from the full 78-card deck — upright or reversed</div>
+        <span class="badge">Most Popular</span>
+      </a>
+      <a href="daily.html" class="feature-card glass">
+        <div class="feature-card-icon">🌙</div>
+        <div class="feature-card-title">Daily Tarot</div>
+        <div class="feature-card-desc">A fresh cosmic message for today's energy</div>
+      </a>
+      <a href="love.html" class="feature-card glass">
+        <div class="feature-card-icon">🌸</div>
+        <div class="feature-card-title">Love Tarot</div>
+        <div class="feature-card-desc">Insight into your heart, connections, and romance</div>
+      </a>
+      <a href="career.html" class="feature-card glass">
+        <div class="feature-card-icon">⭐</div>
+        <div class="feature-card-title">Career Tarot</div>
+        <div class="feature-card-desc">Purpose, abundance, and your next professional move</div>
+      </a>
+      <a href="yesno.html" class="feature-card glass">
+        <div class="feature-card-icon">🌀</div>
+        <div class="feature-card-title">Yes / No Oracle</div>
+        <div class="feature-card-desc">Ask a burning question — receive a clear answer</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- TONIGHT'S WHISPER -->
+  <section class="section" style="padding-top:0">
+    <div class="divider"><i>✦</i></div>
+    <div class="tonight-strip glass fade-in">
+      <p class="tonight-eyebrow">Tonight's whisper from the universe</p>
+      <p class="tonight-msg" id="home-whisper"></p>
+    </div>
+    <p style="text-align:center;font-size:0.75rem;color:var(--ink3);margin-top:1rem;letter-spacing:0.05em">✦ &nbsp; Come back tomorrow for a new message &nbsp; ✦</p>
+  </section>
+
+  <!-- UNLOCK -->
+  <section class="section" style="padding-top:0">
+    <div class="unlock-strip glass">
+      <h3>Get Your Personalized Reading</h3>
+      <p>Unlock a full Celtic Cross spread, birth chart integration, and detailed card interpretation — crafted just for you.</p>
+      <div class="btn-row">
+        <button class="btn btn-unlock" onclick="alert('Personalized readings coming soon ✨')">Unlock Detailed Reading 🔒</button>
+        <button class="btn btn-ghost" onclick="alert('Premium access coming soon ✨')">Learn More</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  ✦ &nbsp; Mystic Pick &nbsp; · &nbsp; Full 78-card tarot deck &nbsp; · &nbsp; Trust your intuition &nbsp; ✦
+</footer>
+
+<script src="deck.js"></script>
+<script src="ui.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const whispers = GENERAL_MESSAGES;
+    document.getElementById('home-whisper').textContent = pick(whispers);
+  });
+</script>
+</body>
+</html>

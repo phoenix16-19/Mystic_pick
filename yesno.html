@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yes / No Oracle — Mystic Pick ✨</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .ritual-steps {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .ritual-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      width: 100px;
+      text-align: center;
+    }
+
+    .ritual-step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(184,159,224,0.15);
+      border: 1px solid rgba(184,159,224,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+      font-size: 0.85rem;
+      color: var(--ink2);
+    }
+
+    .ritual-step-text {
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      color: var(--ink3);
+      line-height: 1.4;
+    }
+
+    .yn-card-reveal {
+      margin: 1.5rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .yn-reveal-card {
+      width: 120px;
+      height: 190px;
+      perspective: 800px;
+      cursor: default;
+    }
+
+    .yn-reveal-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .yn-reveal-card.flipped .yn-reveal-inner {
+      transform: rotateY(180deg);
+    }
+
+    .yn-card-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      backface-visibility: hidden;
+      background: linear-gradient(150deg, #2a1a4a, #1e1438, #0f0a24);
+      border: 1px solid rgba(184,159,224,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .yn-card-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      backface-visibility: hidden;
+      transform: rotateY(180deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+      font-size: 2.2rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+    }
+
+    .yn-card-face.yes   { background: linear-gradient(160deg,#e8fff4,#d0f0e0); color: #3a9a72; }
+    .yn-card-face.no    { background: linear-gradient(160deg,#fff0f0,#f0d0d0); color: #9a4a4a; }
+    .yn-card-face.maybe { background: linear-gradient(160deg,#fffae8,#f0e8c8); color: #9a7a30; }
+
+    .pulsing-ring {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 1px solid rgba(184,159,224,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: ringPulse 2s infinite;
+    }
+
+    @keyframes ringPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(184,159,224,0.3); }
+      50%      { box-shadow: 0 0 0 12px rgba(184,159,224,0); }
+    }
+
+    .char-count {
+      font-size: 0.7rem;
+      color: var(--ink3);
+      text-align: right;
+      margin-top: -0.75rem;
+      margin-bottom: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+
+<div id="star-field"></div>
+
+<div class="suspense-overlay" id="suspense">
+  <div class="suspense-glyph">🌀</div>
+  <div class="suspense-text">Consulting the oracle…</div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-brand">Mystic <span>Pick</span> ✨</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="pick.html">Pick a Card</a></li>
+    <li><a href="daily.html">Daily</a></li>
+    <li><a href="love.html">Love</a></li>
+    <li><a href="career.html">Career</a></li>
+    <li><a href="yesno.html">Yes / No</a></li>
+  </ul>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page">
+
+  <!-- ASK SCREEN -->
+  <div id="ask-screen">
+    <section class="hero fade-in">
+      <p class="eyebrow">✦ &nbsp; Ask the Oracle &nbsp; ✦</p>
+      <h1 class="hero-title" style="font-size:clamp(2.2rem,6vw,4rem)">Yes <em>or</em> No?</h1>
+      <p class="hero-sub">Still your mind. Ask with a sincere heart. The universe will answer honestly.</p>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="yn-wrap">
+
+        <!-- Ritual steps -->
+        <div class="ritual-steps fade-in-2">
+          <div class="ritual-step">
+            <div class="ritual-step-num">1</div>
+            <div class="ritual-step-text">Close your eyes & breathe</div>
+          </div>
+          <div class="ritual-step">
+            <div class="ritual-step-num">2</div>
+            <div class="ritual-step-text">Hold your question in your heart</div>
+          </div>
+          <div class="ritual-step">
+            <div class="ritual-step-num">3</div>
+            <div class="ritual-step-text">Type it below & reveal</div>
+          </div>
+        </div>
+
+        <div class="yn-input-box glass fade-in-3">
+          <p class="yn-prompt">What question is weighing on your soul right now?</p>
+          <input type="text" class="yn-input" id="yn-q"
+                 placeholder="Type your question here…"
+                 maxlength="200"
+                 oninput="updateCharCount()">
+          <div class="char-count"><span id="char-count">0</span> / 200</div>
+          <button class="btn btn-primary" onclick="revealAnswer()" style="min-width:200px">
+            Reveal Answer ✦
+          </button>
+        </div>
+
+        <div class="btn-row" style="margin-top:1rem">
+          <button class="btn btn-unlock" onclick="alert('Full readings coming soon ✨')">Unlock Full Reading 🔒</button>
+        </div>
+
+        <p style="text-align:center;font-size:0.75rem;color:var(--ink3);margin-top:1.5rem;line-height:1.7">
+          For the clearest answer, ask one focused question at a time.<br>
+          The cards respond to honest questions with honest answers.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="result-screen" style="display:none">
+    <section class="hero fade-in" style="padding-bottom:1rem">
+      <p class="eyebrow">✦ &nbsp; The Oracle Speaks &nbsp; ✦</p>
+      <h1 class="hero-title" style="font-size:clamp(2rem,5vw,3.5rem)">Your <em>Answer</em></h1>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="yn-wrap">
+        <div class="yn-result-card glass" id="yn-result-card">
+          <p class="yn-question" id="yn-question-display"></p>
+
+          <!-- Card flip reveal -->
+          <div class="yn-card-reveal">
+            <div class="yn-reveal-card" id="yn-card">
+              <div class="yn-card-back">
+                <div class="pulsing-ring">
+                  <svg width="40" height="40" viewBox="0 0 70 70" fill="none">
+                    <circle cx="35" cy="35" r="28" stroke="rgba(184,159,224,0.5)" stroke-width="0.75"/>
+                    <circle cx="35" cy="35" r="4" fill="rgba(184,159,224,0.6)"/>
+                    <line x1="35" y1="7" x2="35" y2="63" stroke="rgba(184,159,224,0.3)" stroke-width="0.5"/>
+                    <line x1="7" y1="35" x2="63" y2="35" stroke="rgba(184,159,224,0.3)" stroke-width="0.5"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="yn-card-face" id="yn-card-face"></div>
+            </div>
+          </div>
+
+          <div class="yn-answer" id="yn-answer"></div>
+          <div class="result-rule"></div>
+          <p class="yn-exp" id="yn-explanation"></p>
+        </div>
+
+        <div class="btn-row" style="margin-top:1.5rem">
+          <button class="btn btn-primary" onclick="askAgain()">Ask Another Question</button>
+          <button class="btn btn-ghost"   onclick="pickDifferent()">Draw a Card Instead</button>
+        </div>
+
+        <div style="text-align:center;margin-top:1rem">
+          <button class="btn btn-unlock" onclick="alert('Coming soon ✨')">Unlock Full Reading 🔒</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0;padding-bottom:3rem">
+      <div class="divider"><i>✦</i></div>
+      <div class="glass" style="max-width:520px;margin:0 auto;padding:1.75rem 2rem;text-align:center">
+        <p style="font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink3);margin-bottom:0.75rem">A Reminder from the Oracle</p>
+        <p style="font-family:var(--serif);font-size:1rem;font-style:italic;color:var(--ink2);line-height:1.85;font-weight:400" id="oracle-reminder"></p>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<footer>✦ &nbsp; Mystic Pick &nbsp; · &nbsp; The oracle speaks when you are ready to listen &nbsp; ✦</footer>
+
+<script src="deck.js"></script>
+<script src="ui.js"></script>
+<script>
+  const ORACLE_REMINDERS = [
+    "The cards reflect energy, not fate. What you do with the answer is always your choice.",
+    "Asking the same question repeatedly clouds the reading. Trust the first answer you receive.",
+    "The most honest questions receive the clearest answers. Ask from your truth, not your hope.",
+    "Sometimes 'Maybe' is the universe asking you to look deeper before acting.",
+    "A 'No' from the oracle is often a 'Not this way' — not a 'Never'.",
+    "Your readiness to receive the answer shapes the clarity with which it arrives.",
+  ];
+
+  function updateCharCount() {
+    const q = document.getElementById('yn-q').value;
+    document.getElementById('char-count').textContent = q.length;
+  }
+
+  function revealAnswer() {
+    const q = document.getElementById('yn-q').value.trim();
+    if (!q) {
+      const input = document.getElementById('yn-q');
+      input.focus();
+      input.style.boxShadow = '0 0 0 4px rgba(184,159,224,0.3)';
+      setTimeout(() => { input.style.boxShadow = ''; }, 1500);
+      return;
+    }
+
+    showSuspense(1400).then(() => {
+      const result = pick(YESNO_ANSWERS);
+
+      document.getElementById('yn-question-display').textContent = '"' + q + '"';
+
+      // Set card face
+      const face = document.getElementById('yn-card-face');
+      face.textContent  = result.answer;
+      face.className    = 'yn-card-face ' + result.type;
+
+      // Set answer text
+      const ans = document.getElementById('yn-answer');
+      ans.textContent = result.answer;
+      ans.className   = 'yn-answer ' + result.type;
+
+      document.getElementById('yn-explanation').textContent = result.explanation;
+      document.getElementById('oracle-reminder').textContent = pick(ORACLE_REMINDERS);
+
+      document.getElementById('ask-screen').style.display    = 'none';
+      document.getElementById('result-screen').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Flip card with slight delay for drama
+      setTimeout(() => {
+        document.getElementById('yn-card').classList.add('flipped');
+      }, 300);
+    });
+  }
+
+  function askAgain() {
+    document.getElementById('yn-q').value = '';
+    document.getElementById('char-count').textContent = '0';
+    document.getElementById('yn-card').classList.remove('flipped');
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('ask-screen').style.display    = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function pickDifferent() {
+    window.location.href = 'pick.html';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('yn-q').addEventListener('keydown', e => {
+      if (e.key === 'Enter') revealAnswer();
+    });
+  });
+</script>
+</body>
+</html>

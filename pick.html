@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pick a Card — Mystic Pick ✨</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .pick-instruction {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--ink3);
+      letter-spacing: 0.06em;
+      margin-top: 0.75rem;
+    }
+
+    .pick-instruction span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(184,159,224,0.5);
+      margin: 0 3px;
+      animation: twinkle 2s infinite;
+    }
+    .pick-instruction span:nth-child(2) { animation-delay:0.3s; }
+    .pick-instruction span:nth-child(3) { animation-delay:0.6s; }
+
+    .suit-chips {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .suit-chip {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 50px;
+      border: 1px solid rgba(184,159,224,0.3);
+      background: rgba(184,159,224,0.07);
+      color: var(--ink3);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .suit-chip:hover,
+    .suit-chip.active {
+      background: rgba(184,159,224,0.18);
+      color: var(--ink2);
+      border-color: rgba(184,159,224,0.55);
+    }
+
+    .count-chips {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .count-chip {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(184,159,224,0.35);
+      background: transparent;
+      color: var(--ink2);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--sans);
+    }
+
+    .count-chip.active,
+    .count-chip:hover {
+      background: rgba(184,159,224,0.2);
+      border-color: rgba(184,159,224,0.6);
+    }
+
+    .card-count-label {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--ink3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div id="star-field"></div>
+
+<div class="suspense-overlay" id="suspense">
+  <div class="suspense-glyph">⭐</div>
+  <div class="suspense-text">The cards are speaking…</div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-brand">Mystic <span>Pick</span> ✨</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="pick.html">Pick a Card</a></li>
+    <li><a href="daily.html">Daily</a></li>
+    <li><a href="love.html">Love</a></li>
+    <li><a href="career.html">Career</a></li>
+    <li><a href="yesno.html">Yes / No</a></li>
+  </ul>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page">
+
+  <!-- PICK SCREEN -->
+  <div id="pick-screen">
+    <section class="hero fade-in">
+      <p class="eyebrow">✦ &nbsp; Full 78-Card Deck &nbsp; ✦</p>
+      <h1 class="hero-title" style="font-size:clamp(2.2rem,6vw,4rem)">Choose Your <em>Card</em></h1>
+      <p class="hero-sub">Still your breath. Let your eyes soften. One card is already calling to you.</p>
+    </section>
+
+    <section class="section" style="padding-top:0">
+
+      <!-- Controls -->
+      <div class="card-count-label">Number of cards</div>
+      <div class="count-chips" id="count-chips">
+        <button class="count-chip" data-n="1">1</button>
+        <button class="count-chip active" data-n="3">3</button>
+        <button class="count-chip" data-n="5">5</button>
+      </div>
+
+      <div class="suit-chips" id="suit-chips">
+        <span class="suit-chip active" data-suit="all">All Cards</span>
+        <span class="suit-chip" data-suit="major">Major Arcana</span>
+        <span class="suit-chip" data-suit="cups">Cups 💙</span>
+        <span class="suit-chip" data-suit="pentacles">Pentacles 🪙</span>
+        <span class="suit-chip" data-suit="swords">Swords ⚔️</span>
+        <span class="suit-chip" data-suit="wands">Wands 🔥</span>
+      </div>
+
+      <div class="cards-row" id="cards-row"></div>
+      <p class="pick-instruction">
+        <span></span><span></span><span></span>
+        &nbsp; Hover to sense the energy · click to reveal &nbsp;
+        <span></span><span></span><span></span>
+      </p>
+    </section>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="result-screen" style="display:none">
+    <section class="hero fade-in" style="padding-bottom:1rem">
+      <p class="eyebrow" id="res-suit-label">✦ &nbsp; Your Reading &nbsp; ✦</p>
+      <h1 class="hero-title" style="font-size:clamp(2rem,5vw,3.5rem)">Your <em>Message</em></h1>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="result-panel">
+        <div class="result-card glass">
+          <span class="result-emoji" id="res-emoji"></span>
+          <div class="result-card-name" id="res-name"></div>
+          <div class="result-orientation" id="res-orient"></div>
+          <div class="result-rule"></div>
+          <p class="result-msg" id="res-msg"></p>
+          <div class="result-keyword" id="res-kw"></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="resetPick()">Pick Again</button>
+          <button class="btn btn-ghost" onclick="resetPick()">Try Different Cards</button>
+        </div>
+
+        <div style="margin-top:1.5rem">
+          <button class="btn btn-unlock" onclick="alert('Full readings coming soon ✨')">Unlock Detailed Reading 🔒</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0;padding-bottom:3rem">
+      <div class="unlock-strip glass">
+        <h3>Want More Depth?</h3>
+        <p>A full Celtic Cross spread reveals past influences, hidden factors, and the final outcome — all from your unique birth chart.</p>
+        <button class="btn btn-unlock" onclick="alert('Personalized readings coming soon ✨')">Get Your Personalized Reading 🔒</button>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<footer>✦ &nbsp; Mystic Pick &nbsp; · &nbsp; Full 78-card tarot deck &nbsp; · &nbsp; Trust your intuition &nbsp; ✦</footer>
+
+<script src="deck.js"></script>
+<script src="ui.js"></script>
+<script>
+  let cardCount  = 3;
+  let suitFilter = 'all';
+  let selectedCard = null;
+
+  // Count chips
+  document.querySelectorAll('.count-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.count-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      cardCount = parseInt(chip.dataset.n);
+      dealCards();
+    });
+  });
+
+  // Suit chips
+  document.querySelectorAll('.suit-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.suit-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      suitFilter = chip.dataset.suit;
+      dealCards();
+    });
+  });
+
+  function getFilteredDeck() {
+    if (suitFilter === 'all') return FULL_DECK;
+    return FULL_DECK.filter(c => c.suit === suitFilter);
+  }
+
+  function dealCards() {
+    const deck = getFilteredDeck();
+    if (deck.length < cardCount) {
+      alert('Not enough cards in this filter. Try "All Cards".');
+      return;
+    }
+    buildCards('cards-row', cardCount, onCardRevealed);
+  }
+
+  function onCardRevealed({ card, reversed }) {
+    selectedCard = { card, reversed };
+
+    showSuspense(1100).then(() => {
+      document.getElementById('res-emoji').textContent  = card.emoji;
+      document.getElementById('res-name').textContent   = card.name;
+
+      const orientEl = document.getElementById('res-orient');
+      if (reversed) {
+        orientEl.textContent  = '⟳ Reversed';
+        orientEl.className    = 'result-orientation rev';
+      } else {
+        orientEl.textContent  = '↑ Upright';
+        orientEl.className    = 'result-orientation up';
+      }
+
+      document.getElementById('res-msg').textContent = reversed ? card.reversed : card.upright;
+      document.getElementById('res-kw').textContent  = card.keywords ? card.keywords[0] : card.suit;
+
+      const suit = card.suit === 'major' ? 'Major Arcana' :
+                   card.suit.charAt(0).toUpperCase() + card.suit.slice(1);
+      document.getElementById('res-suit-label').textContent = `✦  ${suit}  ·  ${card.num}  ✦`;
+
+      document.getElementById('pick-screen').style.display   = 'none';
+      document.getElementById('result-screen').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  function resetPick() {
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('pick-screen').style.display   = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    dealCards();
+  }
+
+  document.addEventListener('DOMContentLoaded', dealCards);
+</script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Tarot — Mystic Pick ✨</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .love-pick-hint {
+      text-align: center;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--ink3);
+      margin-bottom: 2rem;
+    }
+
+    .spread-positions {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .spread-pos {
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .spread-pos-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink3);
+      margin-bottom: 0.4rem;
+    }
+
+    .spread-pos.active .spread-pos-label { color: var(--rose); }
+
+    .love-result-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .pos-badge {
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 50px;
+      background: rgba(212,120,154,0.1);
+      color: var(--rose);
+      border: 1px solid rgba(212,120,154,0.3);
+    }
+
+    .love-msgs-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .love-full-card {
+      padding: 2.5rem 2rem;
+      text-align: center;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+<div id="star-field"></div>
+
+<div class="suspense-overlay" id="suspense">
+  <div class="suspense-glyph">🌸</div>
+  <div class="suspense-text">Reading the love energy…</div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-brand">Mystic <span>Pick</span> ✨</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="pick.html">Pick a Card</a></li>
+    <li><a href="daily.html">Daily</a></li>
+    <li><a href="love.html">Love</a></li>
+    <li><a href="career.html">Career</a></li>
+    <li><a href="yesno.html">Yes / No</a></li>
+  </ul>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page">
+
+  <!-- PICK SCREEN -->
+  <div id="love-pick-screen">
+    <section class="hero fade-in">
+      <p class="eyebrow">✦ &nbsp; Heart & Soul &nbsp; ✦</p>
+      <h1 class="hero-title" style="font-size:clamp(2.2rem,6vw,4rem)">Love <em>Tarot</em></h1>
+      <p class="hero-sub">Your heart already knows. Let one card illuminate what it is trying to tell you.</p>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="spread-positions">
+        <div class="spread-pos active" id="pos0">
+          <div class="spread-pos-label">Present Heart</div>
+        </div>
+        <div class="spread-pos" id="pos1">
+          <div class="spread-pos-label">What to Release</div>
+        </div>
+        <div class="spread-pos" id="pos2">
+          <div class="spread-pos-label">What's Coming</div>
+        </div>
+      </div>
+
+      <p class="love-pick-hint">Choose the card position above, then select a card below</p>
+
+      <div class="cards-row" id="love-cards-row"></div>
+      <p style="text-align:center;font-size:0.78rem;color:var(--ink3);margin-top:0.75rem;letter-spacing:0.05em">
+        ✦ &nbsp; One card at a time · let your intuition choose &nbsp; ✦
+      </p>
+    </section>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="love-result-screen" style="display:none">
+    <section class="hero fade-in" style="padding-bottom:1rem">
+      <p class="eyebrow">✦ &nbsp; Love Reading &nbsp; ✦</p>
+      <h1 class="hero-title" style="font-size:clamp(2rem,5vw,3.5rem)">Your Heart <em>Speaks</em></h1>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <!-- Main card result -->
+      <div class="result-panel">
+        <div class="result-card glass">
+          <span class="result-emoji" id="love-res-emoji"></span>
+          <div class="result-card-name" id="love-res-name"></div>
+          <div style="display:flex;gap:0.5rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap">
+            <div class="result-orientation" id="love-res-orient"></div>
+            <div class="pos-badge" id="love-res-pos"></div>
+          </div>
+          <div class="result-rule"></div>
+          <p class="result-msg" id="love-res-msg"></p>
+          <div class="result-keyword" id="love-res-kw"></div>
+        </div>
+      </div>
+
+      <!-- Love insight messages (3 static) -->
+      <div class="love-msgs-grid" id="love-msgs-grid" style="margin-top:2rem"></div>
+
+      <div class="btn-row" style="margin-top:2rem">
+        <button class="btn btn-primary" onclick="resetLove()">New Reading</button>
+        <button class="btn btn-unlock" onclick="alert('Full readings coming soon ✨')">Unlock Full Reading 🔒</button>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0;padding-bottom:3rem">
+      <div class="unlock-strip glass">
+        <h3>Ready for a Full Love Spread?</h3>
+        <p>Unlock a 7-card relationship spread — past karma, current dynamic, hidden feelings, and the final outcome — all personalised for you.</p>
+        <button class="btn btn-unlock" onclick="alert('Coming soon ✨')">Get Your Love Reading 🔒</button>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<footer>✦ &nbsp; Mystic Pick &nbsp; · &nbsp; Trust your heart &nbsp; ✦</footer>
+
+<script src="deck.js"></script>
+<script src="ui.js"></script>
+<script>
+  const LOVE_POSITIONS = ['Present Heart', 'What to Release', 'What\'s Coming'];
+  let activePos = 0;
+
+  document.querySelectorAll('.spread-pos').forEach((el, i) => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.spread-pos').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      activePos = i;
+    });
+  });
+
+  function dealLoveCards() {
+    buildCards('love-cards-row', 3, onLoveCard);
+  }
+
+  function onLoveCard({ card, reversed }) {
+    showSuspense(1000).then(() => {
+      document.getElementById('love-res-emoji').textContent = card.emoji;
+      document.getElementById('love-res-name').textContent  = card.name;
+      document.getElementById('love-res-pos').textContent   = LOVE_POSITIONS[activePos];
+
+      const orientEl = document.getElementById('love-res-orient');
+      orientEl.textContent = reversed ? '⟳ Reversed' : '↑ Upright';
+      orientEl.className   = 'result-orientation ' + (reversed ? 'rev' : 'up');
+
+      document.getElementById('love-res-msg').textContent = reversed ? card.reversed : card.upright;
+      document.getElementById('love-res-kw').textContent  = card.keywords ? card.keywords[0] : 'Love';
+
+      // Love insight cards
+      const msgs = pickN(LOVE_MESSAGES, 3);
+      const grid = document.getElementById('love-msgs-grid');
+      grid.innerHTML = '';
+      const labels = ['The Heart Says', 'The Soul Knows', 'The Path Forward'];
+      msgs.forEach((m, i) => {
+        const div = document.createElement('div');
+        div.className = 'msg-card glass';
+        div.style.animationDelay = (i * 0.1) + 's';
+        div.innerHTML = `
+          <div class="msg-icon">${m.icon}</div>
+          <div class="msg-body">
+            <div class="msg-label">${labels[i]}</div>
+            <div class="msg-title">${m.title}</div>
+            <div class="msg-text">${m.text}</div>
+            <span class="msg-kw">${m.keyword}</span>
+          </div>`;
+        grid.appendChild(div);
+      });
+
+      document.getElementById('love-pick-screen').style.display   = 'none';
+      document.getElementById('love-result-screen').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  function resetLove() {
+    document.getElementById('love-result-screen').style.display = 'none';
+    document.getElementById('love-pick-screen').style.display   = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    dealLoveCards();
+  }
+
+  document.addEventListener('DOMContentLoaded', dealLoveCards);
+</script>
+</body>
+</html>
